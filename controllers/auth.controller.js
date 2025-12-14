@@ -1,6 +1,7 @@
     const bcrypt = require('bcrypt');
     const User = require('../models/user.model');
     const jwt = require('jsonwebtoken');
+    const ENV = require('../config/env');
 
     const register = async (req, res) => {
     try {
@@ -52,13 +53,57 @@
     };
 
 
-    const login = async (req, res) => {
-    // login logic here
+        const login = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        // 1. Validation
+        if (!email || !password) {
+        return res.status(400).json({ message: 'Email et mot de passe requis' });
+        }
+
+        // 2. Vérifier si utilisateur existe
+        const user = await User.findOne({ email });
+        if (!user) {
+        return res.status(404).json({ message: 'Utilisateur non trouvé' });
+        }
+
+        // 3. Vérifier mot de passe
+        const isMatch = await bcrypt.compare(password, user.password_hash);
+        if (!isMatch) {
+        return res.status(401).json({ message: 'Mot de passe incorrect' });
+        }
+
+        // 4. Générer JWT
+        const payload = { id: user._id, username: user.username };
+        const token = jwt.sign(payload, ENV.JWT_SECRET, { expiresIn: '1d' });
+
+        // 5. Répondre + cookie HttpOnly
+        res
+        .cookie('token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            maxAge: 24 * 60 * 60 * 1000, // 1 jour
+        })
+        .status(200)
+        .json({
+            message: 'Login réussi',
+            user: {
+            id: user._id,
+            username: user.username,
+            email: user.email,
+            },
+        });
+    } catch (error) {
+        console.error('LOGIN ERROR:', error);
+        return res.status(500).json({ message: 'Erreur serveur' });
+    }
     };
 
 
     module.exports = {
     register,
+    login,
     };
 
 

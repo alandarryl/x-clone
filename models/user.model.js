@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema(
             trim: true,
             match: [/.+\@.+\..+/, 'Please fill a valid email address']
         },
-        password: {
+        password_hash: {
             type: String,
             required: true,
         },
