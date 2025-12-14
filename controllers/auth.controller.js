@@ -1,7 +1,8 @@
     const bcrypt = require('bcrypt');
     const User = require('../models/user.model');
+    const jwt = require('jsonwebtoken');
 
-    exports.register = async (req, res) => {
+    const register = async (req, res) => {
     try {
         const { username, email, password } = req.body;
 
@@ -26,7 +27,7 @@
         }
 
         // 3. Hash du mot de passe
-        const password_hash = await bcrypt.hash(password, 12);
+        const password_hash = await bcrypt.hash(password, 10);
 
         // 4. Création utilisateur
         const user = await User.create({
@@ -49,3 +50,16 @@
         res.status(500).json({ message: 'Erreur serveur' });
     }
     };
+
+
+    const login = async (req, res) => {
+    // login logic here
+    };
+
+
+    module.exports = {
+    register,
+    };
+
+
+
