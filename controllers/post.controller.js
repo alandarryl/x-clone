@@ -55,6 +55,16 @@ const getPostsLikedByUserId = async(req, res) =>{
     }
 }
 
+//get like count of a post
+const getLikeCountOfPost = async(req, res) =>{
+    try{
+        // fetch like count from database using post id
+    }
+    catch(error){
+        return res.status(500).json({message: error.message});
+    }
+}
+
 //get get posts reposted by user id
 const getPostsRepostedByUserId = async(req, res) =>{
     try{
