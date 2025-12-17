@@ -1,16 +1,16 @@
 
 const mongoose = require('mongoose');
 
-const retweetSchema = new mongoose.Schema(
+const repostSchema = new mongoose.Schema(
     {
         user_id: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
             required: true
         },
-        tweet_id: {
+        post_id: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Tweet',
+            ref: 'Post',
             required: true
         },
     },
@@ -19,4 +19,4 @@ const retweetSchema = new mongoose.Schema(
     }
 )
 
-module.exports = mongoose.model('Retweet', retweetSchema);
+module.exports = mongoose.model('Repost', repostSchema);

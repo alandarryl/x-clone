@@ -1,7 +1,7 @@
 
 const mongoose = require('mongoose');
 
-const tweetSchema = new mongoose.Schema(
+const postSchema = new mongoose.Schema(
     {
         user_id: {
             type: mongoose.Schema.Types.ObjectId,
@@ -17,17 +17,21 @@ const tweetSchema = new mongoose.Schema(
             type: String,
             default: ''
         },
-        reply_to:{
+        likes: [{
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Tweet',
-            default: null
-        },
+            ref: 'User'
+        }],
+        reposts: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Repost'
+        }]
     },
     { 
         timestamps: true
     }
 )
 
-module.exports = mongoose.model('Tweet', tweetSchema);
+
+module.exports = mongoose.model('Post', postSchema);
 
 
