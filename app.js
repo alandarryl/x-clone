@@ -14,11 +14,13 @@ app.use(helmet());
 const authRoutes = require('./routes/auth.routes');
 const postRoutes = require('./routes/post.routes');
 const followRoutes = require('./routes/follow.routes');
+const repostRoutes = require('./routes/repost.routes.Js');
 
 
 // call all the routes
 app.use('/api/auth', authRoutes);
 app.use('/api/post/', postRoutes);
 app.use('/api/follow', followRoutes);
+app.use('/api/repost', repostRoutes);
 
 module.exports = app;
