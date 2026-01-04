@@ -1,147 +1,248 @@
-const post = require('../models/post.model');
+    const Post = require('../models/post.model');
 
+    /**
+     * CREATE POST
+     */
+    const createPost = async (req, res) => {
+    try {
+        const { content, media_url } = req.body;
 
-// create a post
+        if (!content) {
+        return res.status(400).json({ message: 'Content is required' });
+        }
 
-const createPost = async(req, res) =>{
-    try{
-        // get data from request body
-    }
-    catch(error){
-        return res.status(500).json({message: error.message});
-    }
-}
+        const post = await Post.create({
+        user_id: req.user.id,
+        content,
+        media_url
+        });
 
+        return res.status(201).json(post);
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+    };
 
-// get all posts
+    /**
+     * GET ALL POSTS
+     */
+    const getAllPosts = async (req, res) => {
+    try {
+        const posts = await Post.find()
+        .populate('user_id', 'username avatar_url')
+        .sort({ createdAt: -1 });
 
-const getAllPosts = async(req, res) =>{
-    try{
-        // fetch posts from database
+        return res.status(200).json(posts);
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
     }
-    catch(error){
-        return res.status(500).json({message: error.message});
-    }
-}
+    };
 
-//get post by id
+    /**
+     * GET POST BY ID
+     */
+    const getPostById = async (req, res) => {
+    try {
+        const post = await Post.findById(req.params.id)
+        .populate('user_id', 'username avatar_url');
 
-const getPostById = async(req, res) =>{
-    try{
-        // fetch post from database using id
-    }
-    catch(error){
-        return res.status(500).json({message: error.message});
-    }
-}
+        if (!post) {
+        return res.status(404).json({ message: 'Post not found' });
+        }
 
-//get posts by user id
-const getPostsByUserId = async(req, res) =>{
-    try{
-        // fetch posts from database using user id
+        return res.status(200).json(post);
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
     }
-    catch(error){
-        return res.status(500).json({message: error.message});
-    }
-}
+    };
 
-//get posts liked by user id
-const getPostsLikedByUserId = async(req, res) =>{
-    try{
-        // fetch posts liked by user from database using user id
-    }
-    catch(error){
-        return res.status(500).json({message: error.message});
-    }
-}
+    /**
+     * GET POSTS BY USER ID
+     */
+    const getPostsByUserId = async (req, res) => {
+    try {
+        const posts = await Post.find({ user_id: req.params.userId })
+        .sort({ createdAt: -1 });
 
-//get like count of a post
-const getLikeCountOfPost = async(req, res) =>{
-    try{
-        // fetch like count from database using post id
+        return res.status(200).json(posts);
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
     }
-    catch(error){
-        return res.status(500).json({message: error.message});
-    }
-}
+    };
 
-//get get posts reposted by user id
-const getPostsRepostedByUserId = async(req, res) =>{
-    try{
-        // fetch posts reposted by user from database using user id
-    }
-    catch(error){
-        return res.status(500).json({message: error.message});
-    }
-}
+    /**
+     * GET POSTS LIKED BY USER ID
+     */
+    const getPostsLikedByUserId = async (req, res) => {
+    try {
+        const posts = await Post.find({
+        likes: req.params.userId
+        });
 
-//get posts containing specific hashtag
-const getPostsByHashtag = async(req, res) =>{
-    try{
-        // fetch posts containing specific hashtag from database
+        return res.status(200).json(posts);
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
     }
-    catch(error){
-        return res.status(500).json({message: error.message});
-    }
-}
+    };
 
-//get posts ordered by number of likes
-const getPostsOrderedByLikes = async(req, res) =>{
-    try{
-        // fetch posts ordered by number of likes from database
-    }
-    catch(error){
-        return res.status(500).json({message: error.message});
-    }
-}
+    /**
+     * GET LIKE COUNT OF A POST
+     */
+    const getLikeCountOfPost = async (req, res) => {
+    try {
+        const post = await Post.findById(req.params.id).select('likes');
 
-//get posts ordered by number of reposts
-const getPostsOrderedByReposts = async(req, res) =>{
-    try{
-        // fetch posts ordered by number of reposts from database
-    }
-    catch(error){
-        return res.status(500).json({message: error.message});
-    }
-}
+        if (!post) {
+        return res.status(404).json({ message: 'Post not found' });
+        }
 
-//get post ordered by creation date
-const getPostsOrderedByDate = async(req, res) =>{
-    try{
-        // fetch posts ordered by creation date from database
+        return res.status(200).json({ likes: post.likes.length });
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
     }
-    catch(error){
-        return res.status(500).json({message: error.message});
-    }
-}
+    };
 
-//delete post by id
-const deletePostById = async(req, res) =>{
-    try{
-        // delete post from database using id
-    }
-    catch(error){
-        return res.status(500).json({message: error.message});
-    }
-}
+    /**
+     * GET POSTS REPOSTED BY USER ID
+     */
+    const getPostsRepostedByUserId = async (req, res) => {
+    try {
+        const posts = await Post.find({
+        reposts: req.params.userId
+        });
 
-//edit post by id
-const editPostById = async(req, res) =>{
-    try{
-        // edit post in database using id
+        return res.status(200).json(posts);
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
     }
-    catch(error){
-        return res.status(500).json({message: error.message});
-    }
-}
+    };
 
-//export functions
-module.exports = {
+    /**
+     * GET POSTS BY HASHTAG
+     */
+    const getPostsByHashtag = async (req, res) => {
+    try {
+        const hashtag = req.params.hashtag;
+
+        const posts = await Post.find({
+        content: { $regex: `#${hashtag}`, $options: 'i' }
+        });
+
+        return res.status(200).json(posts);
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+    };
+
+    /**
+     * GET POSTS ORDERED BY LIKES
+     */
+    const getPostsOrderedByLikes = async (req, res) => {
+    try {
+        const posts = await Post.aggregate([
+        {
+            $addFields: { likeCount: { $size: '$likes' } }
+        },
+        {
+            $sort: { likeCount: -1 }
+        }
+        ]);
+
+        return res.status(200).json(posts);
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+    };
+
+    /**
+     * GET POSTS ORDERED BY REPOSTS
+     */
+    const getPostsOrderedByReposts = async (req, res) => {
+    try {
+        const posts = await Post.aggregate([
+        {
+            $addFields: { repostCount: { $size: '$reposts' } }
+        },
+        {
+            $sort: { repostCount: -1 }
+        }
+        ]);
+
+        return res.status(200).json(posts);
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+    };
+
+    /**
+     * GET POSTS ORDERED BY DATE
+     */
+    const getPostsOrderedByDate = async (req, res) => {
+    try {
+        const posts = await Post.find().sort({ createdAt: -1 });
+
+        return res.status(200).json(posts);
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+    };
+
+    /**
+     * DELETE POST
+     */
+    const deletePostById = async (req, res) => {
+    try {
+        const post = await Post.findById(req.params.id);
+
+        if (!post) {
+        return res.status(404).json({ message: 'Post not found' });
+        }
+
+        if (post.user_id.toString() !== req.user.id) {
+        return res.status(403).json({ message: 'Unauthorized' });
+        }
+
+        await post.deleteOne();
+        return res.status(200).json({ message: 'Post deleted' });
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+    };
+
+    /**
+     * EDIT POST
+     */
+    const editPostById = async (req, res) => {
+    try {
+        const { content, media_url } = req.body;
+
+        const post = await Post.findById(req.params.id);
+
+        if (!post) {
+        return res.status(404).json({ message: 'Post not found' });
+        }
+
+        if (post.user_id.toString() !== req.user.id) {
+        return res.status(403).json({ message: 'Unauthorized' });
+        }
+
+        post.content = content ?? post.content;
+        post.media_url = media_url ?? post.media_url;
+
+        await post.save();
+        return res.status(200).json(post);
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+    };
+
+    module.exports = {
     createPost,
     getAllPosts,
     getPostById,
     getPostsByUserId,
     getPostsLikedByUserId,
+    getLikeCountOfPost,
     getPostsRepostedByUserId,
     getPostsByHashtag,
     getPostsOrderedByLikes,
@@ -149,6 +250,4 @@ module.exports = {
     getPostsOrderedByDate,
     deletePostById,
     editPostById
-}
-
-
+    };

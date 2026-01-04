@@ -12,10 +12,11 @@ app.use(helmet());
 
 // all the routes 
 const authRoutes = require('./routes/auth.routes');
+const postRoutes = require('./routes/post.routes');
 
 
 // call all the routes
 app.use('/api/auth', authRoutes);
-
+app.use('/api/post/', postRoutes);
 
 module.exports = app;
