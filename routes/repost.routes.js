@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const authMiddleware = require('../middlewares/auth.middleware');
 
-const repostController = require('../controllers/repost.controller');
+const repostController = require('../controllers/repost.controller.Js');
 
 // Repost a post
 router.post('/:postId/repost', authMiddleware, repostController.createRepost);
