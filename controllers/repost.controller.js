@@ -1,8 +1,6 @@
 const Repost = require('../models/repost.model');
 
-/**
- * CREATE A REPOST
- */
+/*CREATE A REPOST*/
 const createRepost = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -22,9 +20,7 @@ const createRepost = async (req, res) => {
   }
 };
 
-/**
- * DELETE A REPOST
- */
+/* DELETE A REPOST */
 const deleteRepostById = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -42,9 +38,7 @@ const deleteRepostById = async (req, res) => {
   }
 };
 
-/**
- * GET ALL REPOSTS
- */
+/*GET ALL REPOSTS */
 const getAllReposts = async (req, res) => {
   try {
     const reposts = await Repost.find().populate('user_id', 'username').populate('post_id');
@@ -54,9 +48,7 @@ const getAllReposts = async (req, res) => {
   }
 };
 
-/**
- * GET REPOST BY ID
- */
+/*GET REPOST BY ID*/
 const getRepostById = async (req, res) => {
   try {
     const repost = await Repost.findById(req.params.id).populate('user_id', 'username').populate('post_id');
@@ -67,9 +59,7 @@ const getRepostById = async (req, res) => {
   }
 };
 
-/**
- * GET REPOSTS BY USER ID
- */
+/*GET REPOSTS BY USER ID*/
 const getRepostsByUserId = async (req, res) => {
   try {
     const reposts = await Repost.find({ user_id: req.params.userId }).populate('post_id');
@@ -79,9 +69,7 @@ const getRepostsByUserId = async (req, res) => {
   }
 };
 
-/**
- * GET REPOSTS OF A POST
- */
+/*GET REPOSTS OF A POST*/
 const getRepostsOfPostId = async (req, res) => {
   try {
     const reposts = await Repost.find({ post_id: req.params.postId }).populate('user_id', 'username');

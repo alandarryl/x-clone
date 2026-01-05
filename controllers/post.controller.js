@@ -1,8 +1,6 @@
     const Post = require('../models/post.model');
 
-    /**
-     * CREATE POST
-     */
+    /*CREATE POST */
     const createPost = async (req, res) => {
     try {
         const { content, media_url } = req.body;
@@ -23,9 +21,7 @@
     }
     };
 
-    /**
-     * GET ALL POSTS
-     */
+    /*GET ALL POSTS*/
     const getAllPosts = async (req, res) => {
     try {
         const posts = await Post.find()
@@ -38,9 +34,7 @@
     }
     };
 
-    /**
-     * GET POST BY ID
-     */
+    /*GET POST BY ID */
     const getPostById = async (req, res) => {
     try {
         const post = await Post.findById(req.params.id)
@@ -56,9 +50,7 @@
     }
     };
 
-    /**
-     * GET POSTS BY USER ID
-     */
+    /*GET POSTS BY USER ID*/
     const getPostsByUserId = async (req, res) => {
     try {
         const posts = await Post.find({ user_id: req.params.userId })
@@ -70,9 +62,7 @@
     }
     };
 
-    /**
-     * GET POSTS LIKED BY USER ID
-     */
+    /*GET POSTS LIKED BY USER ID */
     const getPostsLikedByUserId = async (req, res) => {
     try {
         const posts = await Post.find({
@@ -85,9 +75,7 @@
     }
     };
 
-    /**
-     * GET LIKE COUNT OF A POST
-     */
+    /*GET LIKE COUNT OF A POST */
     const getLikeCountOfPost = async (req, res) => {
     try {
         const post = await Post.findById(req.params.id).select('likes');
@@ -102,9 +90,7 @@
     }
     };
 
-    /**
-     * GET POSTS REPOSTED BY USER ID
-     */
+    /*GET POSTS REPOSTED BY USER ID */
     const getPostsRepostedByUserId = async (req, res) => {
     try {
         const posts = await Post.find({
@@ -117,9 +103,7 @@
     }
     };
 
-    /**
-     * GET POSTS BY HASHTAG
-     */
+    /*GET POSTS BY HASHTAG*/
     const getPostsByHashtag = async (req, res) => {
     try {
         const hashtag = req.params.hashtag;
@@ -134,9 +118,7 @@
     }
     };
 
-    /**
-     * GET POSTS ORDERED BY LIKES
-     */
+    /*GET POSTS ORDERED BY LIKES*/
     const getPostsOrderedByLikes = async (req, res) => {
     try {
         const posts = await Post.aggregate([
@@ -154,9 +136,7 @@
     }
     };
 
-    /**
-     * GET POSTS ORDERED BY REPOSTS
-     */
+    /*GET POSTS ORDERED BY REPOSTS */
     const getPostsOrderedByReposts = async (req, res) => {
     try {
         const posts = await Post.aggregate([
@@ -174,9 +154,7 @@
     }
     };
 
-    /**
-     * GET POSTS ORDERED BY DATE
-     */
+    /*GET POSTS ORDERED BY DATE */
     const getPostsOrderedByDate = async (req, res) => {
     try {
         const posts = await Post.find().sort({ createdAt: -1 });
@@ -187,9 +165,7 @@
     }
     };
 
-    /**
-     * DELETE POST
-     */
+    /*DELETE POST */
     const deletePostById = async (req, res) => {
     try {
         const post = await Post.findById(req.params.id);
@@ -209,9 +185,7 @@
     }
     };
 
-    /**
-     * EDIT POST
-     */
+    /*EDIT POST */
     const editPostById = async (req, res) => {
     try {
         const { content, media_url } = req.body;

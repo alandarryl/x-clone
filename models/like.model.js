@@ -8,9 +8,9 @@ const likeSchema = new mongoose.Schema(
             ref: 'User',
             required: true
         },
-        tweet_id: {
+        post_id: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Tweet',
+            ref: 'Post',
             required: true
         },
     },

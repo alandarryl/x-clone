@@ -1,109 +1,81 @@
+const Message = require('../models/message.model');
 
-const message = require('../models/message.model');
-
-//send a message
+// Send a message
 const sendMessage = async (req, res) => {
     try {
-        const { sender_id, receiver_id, content } = req.body;
-        // Create a new message entry
-        const newMessage = await message.create({
-            sender_id,
-            receiver_id,
-            content
-        });
+        const sender_id = req.user.id;
+        const { receiver_id, content } = req.body;
+
+        if (!content || !receiver_id) {
+            return res.status(400).json({ message: 'Content and receiver_id are required' });
+        }
+
+        const newMessage = await Message.create({ sender_id, receiver_id, content });
         return res.status(201).json({ message: "Message sent successfully", messageData: newMessage });
     } catch (error) {
         return res.status(500).json({ message: error.message });
     }
 };
 
-//get messages between two users
+// Get messages between two users
 const getMessagesBetweenUsers = async (req, res) => {
     try {
-        const { user1_id, user2_id } = req.params;
-        // Find all messages between the two users
-        const messages = await message.find({
+        const { userId1, userId2 } = req.params;
+        const messages = await Message.find({
             $or: [
-                { sender_id: user1_id, receiver_id: user2_id },
-                { sender_id: user2_id, receiver_id: user1_id }
+                { sender_id: userId1, receiver_id: userId2 },
+                { sender_id: userId2, receiver_id: userId1 }
             ]
         }).sort({ createdAt: 1 });
         return res.status(200).json({ messages });
-    }
-    catch (error) {
+    } catch (error) {
         return res.status(500).json({ message: error.message });
     }
 };
 
-//get seent messages by a user
-const getSentMessagesByUser = async (req, res) => {
+// Get all messages for a user (sent + received)
+const getMessagesForUser = async (req, res) => {
     try {
-        const { sender_id } = req.params;
-        // Find all messages sent by the given user
-        const messages = await message.find({ sender_id });
-        return res.status(200).json({ messages });
-    }
-    catch (error) {
-        return res.status(500).json({ message: error.message });
-    }
-};
-
-//get received messages by a user
-const getReceivedMessagesByUser = async (req, res) => {
-    try {
-        const { receiver_id } = req.params;
-        // Find all messages received by the given user
-        const messages = await message.find({ receiver_id });
-        return res.status(200).json({ messages });
-    }
-    catch (error) {
-        return res.status(500).json({ message: error.message });
-    }
-};
-
-//get message by date odering
-const getMessagesOrderedByDate = async (req, res) => {
-    try {
-        const { user1_id, user2_id } = req.params;
-        // Find all messages between the two users ordered by date
-        const messages = await message.find({
-            $or: [
-                { sender_id: user1_id, receiver_id: user2_id },
-                { sender_id: user2_id, receiver_id: user1_id }
-            ]
+        const userId = req.params.userId;
+        const messages = await Message.find({
+            $or: [{ sender_id: userId }, { receiver_id: userId }]
         }).sort({ createdAt: -1 });
         return res.status(200).json({ messages });
-    }
-    catch (error) {
+    } catch (error) {
         return res.status(500).json({ message: error.message });
     }
 };
 
-//delete a message
+// Get unread messages for a user
+const getUnreadMessagesForUser = async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        const messages = await Message.find({
+            receiver_id: userId,
+            is_read: false
+        }).sort({ createdAt: -1 });
+        return res.status(200).json({ messages });
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+};
+
+// Delete a message
 const deleteMessage = async (req, res) => {
     try {
-        const { message_id } = req.params;
-        // Find and delete the message entry
-        const deletedMessage = await message.findByIdAndDelete(message_id);
-        if (!deletedMessage) {
-            return res.status(404).json({ message: "Message not found" });
-        }
-        return res.status(200).json({ message: "Message deleted successfully" });
-    }
-    catch (error) {
+        const messageId = req.params.messageId;
+        const deleted = await Message.findByIdAndDelete(messageId);
+        if (!deleted) return res.status(404).json({ message: 'Message not found' });
+        return res.status(200).json({ message: 'Message deleted successfully' });
+    } catch (error) {
         return res.status(500).json({ message: error.message });
     }
 };
 
-//exporting the functions
 module.exports = {
     sendMessage,
     getMessagesBetweenUsers,
-    getSentMessagesByUser,
-    getReceivedMessagesByUser,
-    getMessagesOrderedByDate,
+    getMessagesForUser,
+    getUnreadMessagesForUser,
     deleteMessage
 };
-
-
-
