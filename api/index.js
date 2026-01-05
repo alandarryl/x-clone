@@ -4,10 +4,15 @@ const connectDB = require('../config/db_mongo');
 let isConnected = false;
 
 module.exports = async (req, res) => {
-  if (!isConnected) {
-    await connectDB(process.env.MONGO_URI, process.env.DB_NAME);
-    isConnected = true;
-  }
+    try {
+        if (!isConnected) {
+        await connectDB(process.env.MONGO_URI, process.env.DB_NAME);
+        isConnected = true;
+        }
 
-  return app(req, res);
+        return app(req, res); // OK uniquement si app est un handler express pur
+    } catch (error) {
+        console.error('API error:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
 };

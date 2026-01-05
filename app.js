@@ -14,7 +14,7 @@ app.use(cors());
 const authRoutes = require('./routes/auth.routes');
 const postRoutes = require('./routes/post.routes');
 const followRoutes = require('./routes/follow.routes');
-const repostRoutes = require('./routes/repost.routes.Js');
+const repostRoutes = require('./routes/repost.routes');
 
 
 // call all the routes
