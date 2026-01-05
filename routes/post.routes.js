@@ -7,19 +7,19 @@ const postController = require('../controllers/post.controller');
 const authMiddleware = require('../middlewares/auth.middleware'); 
 
 // Create a new post
-router.post('/', authMiddleware, postController.createPost);
+router.post('/crate/', authMiddleware, postController.createPost);
 
 // Get all posts
-router.get('/', postController.getAllPosts);
+router.get('/getAll/', postController.getAllPosts);
 
 // Get post by id
-router.get('/:id', postController.getPostById);
+router.get('/getOne/:id', postController.getPostById);
 
 // Update post by id
-router.put('/:id', authMiddleware, postController.editPostById);
+router.put('/update/:id', authMiddleware, postController.editPostById);
 
 // Delete post by id
-router.delete('/:id', authMiddleware, postController.deletePostById);
+router.delete('/delete/:id', authMiddleware, postController.deletePostById);
 
 // Get posts by user id
 router.get('/user/:userId', postController.getPostsByUserId);
