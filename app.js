@@ -1,7 +1,7 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
-const helmet = require('helmet');
+// const helmet = require('helmet'); // optional
 
 const app = express();
 
@@ -18,17 +18,16 @@ const repostRoutes = require('./routes/repost.routes');
 const emailVerificationRoutes = require('./routes/emailVerification.routes');
 const messageRoutes = require('./routes/message.routes');
 const userRoutes = require('./routes/user.routes');
-const likeRoute = require('./routes/like.routes');
+const likeRoutes = require('./routes/like.routes');
 
-
-// call all the routes
-app.use('/api/auth', authRoutes);
-app.use('/api/post/', postRoutes);
-app.use('/api/follow', followRoutes);
-app.use('/api/repost', repostRoutes);
-app.use('/api/verifiedMail', emailVerificationRoutes);
-app.use('/api/message', messageRoutes);
-app.use('/api/user', userRoutes);
-app.use('/api/like', likeRoute);
+// call all the routes WITHOUT /api prefix
+app.use('/auth', authRoutes);
+app.use('/post', postRoutes);
+app.use('/follow', followRoutes);
+app.use('/repost', repostRoutes);
+app.use('/verifiedMail', emailVerificationRoutes);
+app.use('/message', messageRoutes);
+app.use('/user', userRoutes);
+app.use('/like', likeRoutes);
 
 module.exports = app;
